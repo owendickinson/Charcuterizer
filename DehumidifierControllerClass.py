@@ -1,7 +1,7 @@
 # Import GPIO interface control module
 import RPi.GPIO as GPIO
 
-class HumidifierController :
+class DehumidifierController :
 
     # Variable defining the range of acceptable humidities (should be a tuple)
     # Units are percent.
@@ -13,7 +13,7 @@ class HumidifierController :
     # Variable defining the GPIO pin that controlls the humidifier relay
     gpioControlPin = None
 
-    isHumidifierActive = False
+    isDehumidifierActive = False
 
     isGpioSetup = False
 
@@ -23,7 +23,7 @@ class HumidifierController :
         self.gpioControlPin = gpioControlPinArg
 
     def printVariables(self):
-        print ('This humidifier controller listens to  to a DHT22 sensor')
+        print ('This dehumidifier controller listens to  to a DHT22 sensor')
         print ('The humidity range is {}'.format(self.targetHumidityRange))
         print ('The control pin number is {}'.format(self.gpioControlPin))
 
@@ -39,28 +39,29 @@ class HumidifierController :
         else :
             print ("Measured humidity ({:4.2f} %) is outside the target range {}".format(humidity, self.targetHumidityRange))
 
-    def switchHumidifier(self) :
+    def switchDehumidifier(self) :
         if not self.isGpioSetup :
             self.setupGpio()
 
         humidity = self.querySensor()
-        # Is the humidity below the target range?
-        if  humidity < self.targetHumidityRange[1] and not self.isHumidifierActive :
-            self.activateHumidifier()
-        elif humidity > self.targetHumidityRange[1] and self.isHumidifierActive :
-            self.deactivateHumidifier()
+        # Is the humidity below the target range? Note same range should be used
+        # for humidifier and dehumidifier target ranges
+        if  humidity > (2 + self.targetHumidityRange[1]) and not self.isDehumidifierActive :
+            self.activateDehumidifier()
+        elif self.isDehumidifierActive :
+            self.deactivateDehumidifier()
 
-    def activateHumidifier(self) :
-        print ('Activating the humidifier')
+    def activateDehumidifier(self) :
+        print ('Activating the dehumidifier')
         ## set output pin to be "high" 3.3 V
         GPIO.output(self.gpioControlPin, GPIO.HIGH)
-        self.isHumidifierActive = True
+        self.isDehumidifierActive = True
 
-    def deactivateHumidifier(self) :
-        print ('Deactivating the humidifier')
+    def deactivateDehumidifier(self) :
+        print ('Deactivating the dehumidifier')
         ## set output pin to be "low" 0 V
         GPIO.output(self.gpioControlPin, GPIO.LOW)
-        self.isHumidifierActive = False
+        self.isDehumidifierActive = False
 
     def setupGpio(self) :
         ## set the pin labelling mode to "broadcom mode"

@@ -11,6 +11,11 @@ from HumidifierControllerClass import HumidifierController
 # The following line imports the code for the class (blueprint) which defines the way
 # that objects of type HumidifierController behave, from a file called
 # HumidifierControllerClass.py
+from DehumidifierControllerClass import DehumidifierController
+
+# The following line imports the code for the class (blueprint) which defines the way
+# that objects of type HumidifierController behave, from a file called
+# HumidifierControllerClass.py
 from HeaterControllerClass import HeaterController
 
 import time
@@ -21,19 +26,28 @@ hts = HumTemSensor(18)
 
 tc = HeaterController(hts, (20, 21), 15)
 tc.printVariables()
+# try :
+#     while True :
+#         tc.switchHeater()
+#         time.sleep(0.5)
+# except KeyboardInterrupt :
+#     print ("KeyboardInterrupt encountered")
+
+targetHumidityRange = (65, 80)
+
+#create an object of type HumidifierController
+hc = HumidifierController(hts, targetHumidityRange, 15)
+hc.printVariables()
+hc.querySensor()
 try :
     while True :
-        tc.switchHeater()
+        hc.switchHumidifier()
         time.sleep(0.5)
 except KeyboardInterrupt :
     print ("KeyboardInterrupt encountered")
 
-#create an object of type HumidifierController
-hc1 = HumidifierController(hts, (55, 65), 15)
-hc1.printVariables()
-hc1.querySensor()
 
 #create an object of type HumidifierController
-hc2 = HumidifierController(hts, (90, 95), 14)
-hc2.printVariables()
-hc2.querySensor()
+dhc = DehumidifierController(hts, targetHumidityRange, 15)
+dhc.printVariables()
+dhc.querySensor()
