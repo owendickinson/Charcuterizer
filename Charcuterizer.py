@@ -29,6 +29,9 @@ import datetime
 # create and initialize a schedule
 schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)], [(60, 70),(80, 90),(65, 85)])
 schedule.printVariables()
+print ("Current humidity range is {}".format(schedule.getHumidityRange()))
+print ("Current temperature range is {}".format(schedule.getTemperatureRange()))
+
 
 # create an object of type HumTemSensor, the first argument is the GPIO pin
 # number dusing the BROADCOM numbering scheme
