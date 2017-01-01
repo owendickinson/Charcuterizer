@@ -17,7 +17,7 @@ from HeaterControllerClass import HeaterController
 # number dusing the BROADCOM numbering scheme
 hts = HumTemSensor(18)
 
-tc = HeaterController(hts, (14, 20), 15)
+tc = HeaterController(hts, (20, 25), 15)
 tc.printVariables()
 tc.querySensor()
 
