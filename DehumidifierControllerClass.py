@@ -24,7 +24,7 @@ class DehumidifierController :
 
     def __del__(self):
         if self.isGpioSetup :
-            GPIO.cleanup()
+            GPIO.cleanup(self.gpioControlPin)
 
     def printVariables(self):
         print ('This dehumidifier controller listens to  to a DHT22 sensor')

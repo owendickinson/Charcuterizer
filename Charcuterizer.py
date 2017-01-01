@@ -24,7 +24,7 @@ import time
 # number dusing the BROADCOM numbering scheme
 hts = HumTemSensor(18)
 
-tc = HeaterController(hts, (20, 21), 15)
+tc = HeaterController(hts, (20, 21), 14)
 tc.printVariables()
 # try :
 #     while True :
