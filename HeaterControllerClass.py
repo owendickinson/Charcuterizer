@@ -43,7 +43,7 @@ class HeaterController:
 
         temperature = self.querySensor()
         # Is the temperature below the target range?
-        if  temperature < self.targetTemperatureRange[0] and not self.isHeaterActive :
+        if  temperature < self.targetTemperatureRange[1] and not self.isHeaterActive :
             self.activateHeater()
         elif temperature > self.targetTemperatureRange[1] and self.isHeaterActive :
             self.deactivateHeater()
