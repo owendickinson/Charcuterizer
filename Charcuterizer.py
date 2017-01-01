@@ -13,13 +13,20 @@ from HumidifierControllerClass import HumidifierController
 # HumidifierControllerClass.py
 from HeaterControllerClass import HeaterController
 
+import time
+
 # create an object of type HumTemSensor, the first argument is the GPIO pin
 # number dusing the BROADCOM numbering scheme
 hts = HumTemSensor(18)
 
-tc = HeaterController(hts, (20, 25), 15)
+tc = HeaterController(hts, (18, 21), 15)
 tc.printVariables()
-tc.querySensor()
+try :
+    while True :
+        tc.switchHeater()
+        time.sleep(0.5)
+except KeyboardInterrupt :
+    print ("KeyboardInterrupt encountered")
 
 #create an object of type HumidifierController
 hc1 = HumidifierController(hts, (55, 65), 15)
