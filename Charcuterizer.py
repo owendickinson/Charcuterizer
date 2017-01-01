@@ -41,7 +41,7 @@ hc.printVariables()
 hc.querySensor()
 
 #create an object of type HumidifierController
-dhc = DehumidifierController(hts, targetHumidityRange, 15)
+dhc = DehumidifierController(hts, targetHumidityRange, 17)
 dhc.printVariables()
 dhc.querySensor()
 
