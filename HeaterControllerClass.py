@@ -52,11 +52,13 @@ class HeaterController:
         print ('Activating the heater')
         ## set output pin to be "high" 3.3 V
         GPIO.output(self.gpioControlPin, GPIO.HIGH)
+        self.isHeaterActive = True
 
     def deactivateHeater(self) :
         print ('Deactivating the heater')
         ## set output pin to be "low" 0 V
         GPIO.output(self.gpioControlPin, GPIO.LOW)
+        self.isHeaterActive = False
 
     def setupGpio(self) :
         ## set the pin labelling mode to "broadcom mode"
