@@ -39,15 +39,16 @@ targetHumidityRange = (65, 80)
 hc = HumidifierController(hts, targetHumidityRange, 15)
 hc.printVariables()
 hc.querySensor()
-try :
-    while True :
-        hc.switchHumidifier()
-        time.sleep(0.5)
-except KeyboardInterrupt :
-    print ("KeyboardInterrupt encountered")
-
 
 #create an object of type HumidifierController
 dhc = DehumidifierController(hts, targetHumidityRange, 15)
 dhc.printVariables()
 dhc.querySensor()
+
+try :
+    while True :
+        hc.switchHumidifier()
+        dhc.switchDehumidifier()
+        time.sleep(0.5)
+except KeyboardInterrupt :
+    print ("KeyboardInterrupt encountered")
