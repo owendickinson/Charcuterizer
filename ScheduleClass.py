@@ -19,8 +19,8 @@ class Schedule :
             self.currentStage += 1
 
     def isUpdateRequired(self) :
-        if not self.isComplete(self.currentStage) :
-            return datetime.date.today() > self.transitionTimes[currentStage]
+        if not self.isComplete() :
+            return datetime.date.today() > self.transitionTimes[self.currentStage]
         else :
             return None
 
