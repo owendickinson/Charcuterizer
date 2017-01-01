@@ -16,7 +16,7 @@ class HumidifierController :
         self.gpioControlPin = gpioControlPinArg
 
     def printVariables(self):
-        print ('This humidifier controller listens to {}'.format(self.sensor))
+        print ('This humidifier controller listens to  to a DHT22 sensor')
         print ('The humidity range is {}'.format(self.targetHumidityRange))
         print ('The control pin number is {}'.format(self.gpioControlPin))
 

@@ -27,17 +27,19 @@ class HumTemSensor:
         self.humTemSensor = DHT22.sensor (self.gpioInterface, self.gpioControlPin)
 
     def getTemperature(self):
-        if self.humTemSensor is not None :
-            self.humTemSensor.trigger()
-            time.sleep (self.waitTime)
-            # we are saving the value determined in the right hand side of the assignment (=) as the word temperature.
-            temperature = self.humTemSensor.temperature()
-            # This bit sends the value back to the part of the code that asked for it.
-            return temperature
+        if self.humTemSensor is None :
+            self.setUpSensor()
+        self.humTemSensor.trigger()
+        time.sleep (self.waitTime)
+        # we are saving the value determined in the right hand side of the assignment (=) as the word temperature.
+        temperature = self.humTemSensor.temperature()
+        # This bit sends the value back to the part of the code that asked for it.
+        return temperature
 
     def getHumidity(self):
-        if self.humTemSensor is not None :
-            self.humTemSensor.trigger()
-            time.sleep (self.waitTime)
-            humidity = self.humTemSensor.humidity()
-            return humidity
+        if self.humTemSensor is None :
+            self.setUpSensor()
+        self.humTemSensor.trigger()
+        time.sleep (self.waitTime)
+        humidity = self.humTemSensor.humidity()
+        return humidity
