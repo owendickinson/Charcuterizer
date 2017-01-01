@@ -22,14 +22,14 @@ class HumidifierController :
 
     def querySensor(self) :
         humidity = self.sensor.getHumidity()
-        print("Sensor queried: Returned H = {} %".format(humidity))
+        print("Sensor queried: Returned H = {:4.2f} %".format(humidity))
         self.isHumidityInRange(humidity)
 
     def isHumidityInRange(self, humidity) :
         if humidity > self.targetHumidityRange[0] and humidity < self.targetHumidityRange[1] :
-            print ("Measured humidity ({} %) is within the target range {}".format(humidity, self.targetHumidityRange))
+            print ("Measured humidity ({:4.2f} %) is within the target range {}".format(humidity, self.targetHumidityRange))
         else :
-            print ("Measured humidity ({} %) is outside the target range {}".format(humidity, self.targetHumidityRange))
+            print ("Measured humidity ({:4.2f} %) is outside the target range {}".format(humidity, self.targetHumidityRange))
 
 
 # end of class definition

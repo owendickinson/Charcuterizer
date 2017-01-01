@@ -24,7 +24,9 @@ tc.querySensor()
 #create an object of type HumidifierController
 hc1 = HumidifierController(hts, (55, 65), 15)
 hc1.printVariables()
+hc1.querySensor()
 
 #create an object of type HumidifierController
 hc2 = HumidifierController(hts, (90, 95), 14)
 hc2.printVariables()
+hc2.querySensor()
