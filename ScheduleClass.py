@@ -26,7 +26,7 @@ class Schedule :
 
     def createTransitionTimes(self, stageDurations) :
         for duration in stageDurations :
-            if len(transitionTimes) == 0 :
+            if len(self.transitionTimes) == 0 :
                 self.transitionTimes.append(datetime.date.today() + datetime.timedelta(days = duration))
             else :
                 self.transitionTimes.append(self.transitionTimes[-1] + datetime.timedelta(days = duration))
