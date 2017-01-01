@@ -22,6 +22,10 @@ class DehumidifierController :
         self.targetHumidityRange = targetHumidityRangeArg
         self.gpioControlPin = gpioControlPinArg
 
+    def __del__(self):
+        if self.isGpioSetup :
+            GPIO.cleanup()
+
     def printVariables(self):
         print ('This dehumidifier controller listens to  to a DHT22 sensor')
         print ('The humidity range is {}'.format(self.targetHumidityRange))
