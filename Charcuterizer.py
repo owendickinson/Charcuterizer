@@ -26,12 +26,6 @@ hts = HumTemSensor(18)
 
 tc = HeaterController(hts, (20, 21), 14)
 tc.printVariables()
-# try :
-#     while True :
-#         tc.switchHeater()
-#         time.sleep(0.5)
-# except KeyboardInterrupt :
-#     print ("KeyboardInterrupt encountered")
 
 targetHumidityRange = (65, 80)
 
@@ -49,6 +43,7 @@ try :
     while True :
         hc.switchHumidifier()
         dhc.switchDehumidifier()
+        tc.switchHeater()
         time.sleep(0.5)
 except KeyboardInterrupt :
     print ("KeyboardInterrupt encountered")
