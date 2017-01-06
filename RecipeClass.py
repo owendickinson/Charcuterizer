@@ -22,8 +22,6 @@ class Recipe :
         self.recipeId = recipeIdArg
 
     def __del__(self):
-        if self.dbCursor is not None :
-            self.dbCursor.close()
         if self.dbConnection is not None :
             self.dbConnection.close()
 
