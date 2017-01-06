@@ -56,9 +56,9 @@ class Logger :
         self.dbCursor.execute(completedStageQuery, (datetime.datetime.now(), datetime.datetime.now(), nextStageCompleted, self.runningBatchLog['id']))
         self.dbConnection.commit()
 
-    def newBatch(self) :
-        newBatchQuery = ('insert into batches (recipe_id, start_date) values (%s, %s)')
-        self.dbCursor.execute(newBatchQuery, (self.recipeId, datetime.datetime.now()))
+    def newBatch(self, comment = '') :
+        newBatchQuery = ('insert into batches (recipe_id, start_date, comment) values (%s, %s, %s)')
+        self.dbCursor.execute(newBatchQuery, (self.recipeId, datetime.datetime.now(), comment))
         batchId = self.dbCursor.lastrowid
         print ('batchId', batchId)
         newBatchLogQuery = ('insert into logs_for_batches (batch_id, time_last_alive) values (%s, %s)')

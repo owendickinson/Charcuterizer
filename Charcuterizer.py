@@ -54,7 +54,7 @@ logger = Logger(recipe.recipeId)
 
 # create a new batch and batch log for this recipe
 logger.connectToDb()
-logger.newBatch()
+logger.newBatch('Test With Comment')
 
 # create an object of type HumTemSensor, the first argument is the GPIO pin
 # number dusing the BROADCOM numbering scheme
