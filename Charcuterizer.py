@@ -54,9 +54,14 @@ dhc.querySensor()
 
 try :
     while True :
+        hc.targetHumidityRange = schedule.getHumidityRange()
+        dhc.targetHumidityRange = schedule.getHumidityRange()
+        tc.targetTemperatureRange = schedule.getTemperatureRange()
+
         hc.switchHumidifier()
         dhc.switchDehumidifier()
         tc.switchHeater()
-        time.sleep(0.5)
+
+        time.sleep(60)
 except KeyboardInterrupt :
     print ("KeyboardInterrupt encountered")
