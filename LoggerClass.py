@@ -55,7 +55,7 @@ class Logger :
         if self.runningBatchLog['last_stage_completed'] is not None :
             nextStageCompleted = self.runningBatchLog['last_stage_completed'] + 1
         completedStageQuery = ('update logs_for_batches set time_last_alive = %s, time_last_stage_completed = %s, last_stage_completed = %s where id = %s')
-        self.dbCursor.execute(completedStageQuery, (datetime.datetime.now(), datetime.datetime.now(), nextStageCompleted))
+        self.dbCursor.execute(completedStageQuery, (datetime.datetime.now(), datetime.datetime.now(), nextStageCompleted, self.runningBatchLog['id']))
         self.dbConnection.commit()
 
     def newBatch(self) :
