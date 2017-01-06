@@ -25,7 +25,7 @@ class Recipe :
             password='Sweetbee4',
             host='localhost',
             database='charcuterizer')
-        except mysql.connector.errors.DatabaseException as error :
+        except mysql.connector.errors.DatabaseError as error :
             print (error)
             self.dbConnection = None
             self.dbCursor = None
@@ -35,7 +35,7 @@ class Recipe :
             # specifying dictionary=True creates a cursor thatreturns rows as
             # dictionaries with keys corresponding to the column names.
             self.dbCursor = self.dbConnection.cursor(dictionary=True)
-        except mysql.connector.errors.DatabaseException as error :
+        except mysql.connector.errors.DatabaseError as error :
             print (error)
             self.dbCursor = None
 
