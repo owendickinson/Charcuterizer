@@ -61,7 +61,7 @@ class Recipe :
             self.minimumTemperatures.append(self.makeDictionaryFromRow(row))
 
         # max temperatures
-        maxTempQuery = ('select max_temp.value as min_temp from temperatures_for_recipes left join min_temp on min_temp.id = temperatures_for_recipes.min_temp_id where temperatures_for_recipes.recipe_id = %s;')
+        maxTempQuery = ('select max_temp.value as max_temp from temperatures_for_recipes left join max_temp on max_temp.id = temperatures_for_recipes.max_temp_id where temperatures_for_recipes.recipe_id = %s;')
         self.dbCursor.execute(maxTempQuery, (self.recipeId,))
         for row in self.dbCursor :
             self.maximumTemperatures.append(self.makeDictionaryFromRow(row))
