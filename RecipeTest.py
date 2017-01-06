@@ -6,3 +6,4 @@ recipe = Recipe(1)
 recipe.connectToDb()
 
 recipe.loadInfoForRecipe()
+recipe.loadInfoForStages()
