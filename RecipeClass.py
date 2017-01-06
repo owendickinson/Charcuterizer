@@ -105,7 +105,7 @@ class Recipe :
 
     def loadLogForLastBatch(self) :
         logQuery = ('select logs_for_batches.* from batches left join logs_for_batches on logs_for_batches.batch_id = batches.id where batches.recipe_id = %s order by batches.id limit 1;')
-        self.dbCursor(logQuery, (self.recipeId,))
+        self.dbCursor.execute(logQuery, (self.recipeId,))
         self.loadLogForBatch = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
 
     def makeScheduleForinterruptedRecipe(self, batchId = None) :
