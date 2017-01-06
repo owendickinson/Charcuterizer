@@ -43,7 +43,7 @@ class Recipe :
         recipeQuery = ('select * from recipes left join literature on recipes.literature_id = literature.id where recipes.id=%s')
         if self.dbCursor is not None :
             self.dbCursor.execute(recipeQuery, (self.recipeId,))
-            row = dict(zip(cursor.column_names, cursor.fetchone()))
+            row = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
             print (row)
 
     def loadInfoForStages(self) :
