@@ -35,7 +35,7 @@ class Logger :
     def loadRunningBatchLog(self) :
         runningBatchQuery = ('select logs_for_batches.* from (select batches.id as batch_id from recipes left join batches on batches.recipe_id = recipes.id where recipes.id = %s order by batches.id desc limit 1) as last_batch_for_recipe left join logs_for_batches on last_batch_for_recipe.batch_id = logs_for_batches.batch_id;')
         self.dbCursor.execute(runningBatchQuery, (self.recipeId,))
-        self.runningBatchLog = dict(zip(self.dbCursor.column_names, elf.dbCursor.fetchone()))
+        self.runningBatchLog = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
 
     def heartbeat(self) :
         self.loadRunningBatchLog()
