@@ -39,7 +39,7 @@ class Recipe :
             self.dbCursor = None
 
     def makeDictionaryFromRow(self, row) :
-        dict(zip(self.dbCursor.column_names, row))
+        return dict(zip(self.dbCursor.column_names, row))
 
     def loadInfoForRecipe(self) :
         recipeQuery = ('select * from recipes left join literature on recipes.literature_id = literature.id where recipes.id=%s')
