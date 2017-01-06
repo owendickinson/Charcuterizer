@@ -1,4 +1,5 @@
 import mysql.connector
+from ScheduleClass import Schedule 
 
 class Recipe :
 
