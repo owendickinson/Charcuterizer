@@ -232,3 +232,47 @@ insert into duration (value) values (42.0);
     (select max(id) from duration),
     2
   );
+
+-- Example for adding a new batch
+
+insert into batches (
+recipe_id,
+start_date,
+score,
+comments
+)
+values
+(
+  1, NOW(), 5, 'Test 1'
+);
+
+insert into batches (
+recipe_id,
+start_date,
+score,
+comments
+)
+values
+(
+  1, NOW(), 7, 'Test 2'
+);
+
+insert into logs_for_batches (
+batch_id,
+last_stage_completed,
+time_last_stage_completed,
+time_last_alive,
+error_count
+)
+values
+(1, 1, DATE_SUB(NOW(), INTERVAL 2 DAY), NOW(), 1);
+
+insert into logs_for_batches (
+batch_id,
+last_stage_completed,
+time_last_stage_completed,
+time_last_alive,
+error_count
+)
+values
+(2, 0, DATE_SUB(NOW(), INTERVAL 1.5 DAY), NOW() - INTERVAL 5 MINUTE, 1);

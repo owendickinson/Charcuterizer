@@ -17,3 +17,8 @@ schedule = recipe.makeScheduleForRecipe(startingStage=1)
 print ('{}\n{}\n{}\n'.format(schedule.transitionTimes,
                              schedule.temperatureRanges,
                              schedule.humidityRanges))
+
+schedule = recipe.makeScheduleForinterruptedRecipe()
+print ('{}\n{}\n{}\n'.format(schedule.transitionTimes,
+                             schedule.temperatureRanges,
+                             schedule.humidityRanges))

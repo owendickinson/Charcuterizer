@@ -1,5 +1,5 @@
 import mysql.connector
-from ScheduleClass import Schedule 
+from ScheduleClass import Schedule
 
 class Recipe :
 
@@ -16,7 +16,7 @@ class Recipe :
 
     recipeInfo = None
 
-
+    logForLastBatch = None
 
     def __init__(self, recipeIdArg) :
         self.recipeId = recipeIdArg
@@ -98,5 +98,26 @@ class Recipe :
 
         schedule = Schedule(durationValues, tempRanges, humidityRanges)
         return schedule
+
+    def loadLogForBatch(self, batchId = None) :
+        if batchId is None :
+            self.loadLogForLastBatch()
+
+    def loadLogForLastBatch(self) :
+        logQuery = ('select logs_for_batches.* from batches left join logs_for_batches on logs_for_batches.batch_id = batches.id where batches.recipe_id = %s order by batches.id limit 1;')
+        self.dbCursor(logQuery, (self.recipeId,))
+        self.loadLogForBatch = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
+
+    def makeScheduleForinterruptedRecipe(self, batchId = None) :
+        self.loadLogForBatch(batchId)
+        if self.log['last_stage_completed'] is not None :
+            schedule = makeScheduleForRecipe(startingStage = self.log['last_stage_completed'] + 1)
+        else :
+            schedule = makeScheduleForRecipe()
+        stageRunningTimeOnFailure = self.log['time_last_alive'] - self.log['time_last_stage_completed']
+        for transitionTime in schedule.transitionTimes :
+            transitionTime -= stageRunningTimeOnFailure
+        return schedule
+
 
 # select min_temp.value as min_temp from temperatures_for_recipes left join min_temp on min_temp.id = temperatures_for_recipes.min_temp_id where temperatures_for_recipes.recipe_id = 1;
