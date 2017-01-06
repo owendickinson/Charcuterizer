@@ -34,7 +34,7 @@ class Recipe :
         try :
             # specifying dictionary=True creates a cursor thatreturns rows as
             # dictionaries with keys corresponding to the column names.
-            self.dbCursor = self.dbConnection.cursor(dictionary=True)
+            self.dbCursor = self.dbConnection.cursor()
         except mysql.connector.errors.DatabaseError as error :
             print (error)
             self.dbCursor = None
@@ -43,8 +43,8 @@ class Recipe :
         recipeQuery = ('select * from recipes left join literature on recipes.literature_id = literature.id where recipes.id=%s')
         if self.dbCursor is not None :
             self.dbCursor.execute(recipeQuery, (self.recipeId,))
-            for row in self.dbCursor :
-                print (row)
+            row = dict(zip(cursor.column_names, cursor.fetchone()))
+            print (row)
 
     def loadInfoForStages(self) :
         pass
