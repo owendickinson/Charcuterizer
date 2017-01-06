@@ -1,4 +1,4 @@
-import mysql.connection
+import mysql.connector
 
 class Recipe :
 
