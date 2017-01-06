@@ -23,15 +23,30 @@ from HeaterControllerClass import HeaterController
 # ScheduleClass.py
 from ScheduleClass import Schedule
 
+from RecipeClass import Recipe
+
+from LoggerClass import Logger
+
 import time
 import datetime
 
-# create and initialize a schedule
-schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)], [(60, 70),(80, 90),(65, 85)])
+# create a Recipe (loads recipe data from the database)
+recipe = Recipe(1)
+recipe.connectToDb()
+
+# Use the recipe to create a schedule
+schedule = recipe.makeScheduleForRecipe()
+# OLD CODE => schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)], [(60, 70),(80, 90),(65, 85)])
 schedule.printVariables()
 print ("Current humidity range is {}".format(schedule.getHumidityRange()))
 print ("Current temperature range is {}".format(schedule.getTemperatureRange()))
 
+# create a Logger object to monitor progress
+logger = Logger(recipe.recipeId)
+
+# create a new batch and batch log for this recipe
+logger.connectToDb()
+logger.newBatch()
 
 # create an object of type HumTemSensor, the first argument is the GPIO pin
 # number dusing the BROADCOM numbering scheme
@@ -39,8 +54,6 @@ hts = HumTemSensor(18)
 
 tc = HeaterController(hts, (20, 21), 14)
 tc.printVariables()
-
-targetHumidityRange = (65, 80)
 
 #create an object of type HumidifierController
 hc = HumidifierController(hts, targetHumidityRange, 15)
@@ -53,7 +66,7 @@ dhc.printVariables()
 dhc.querySensor()
 
 try :
-    while True :
+    while not schedule.isComplete() :
         hc.targetHumidityRange = schedule.getHumidityRange()
         dhc.targetHumidityRange = schedule.getHumidityRange()
         tc.targetTemperatureRange = schedule.getTemperatureRange()
@@ -62,7 +75,11 @@ try :
         dhc.switchDehumidifier()
         tc.switchHeater()
 
-
+        if schedule.isUpdateRequired() :
+            logger.completedStage()
+        else :
+            print ('heartbeat')
+            logger.heartbeat()
 
         time.sleep(60)
 except KeyboardInterrupt :
