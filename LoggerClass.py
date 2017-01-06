@@ -57,7 +57,7 @@ class Logger :
         self.dbConnection.commit()
 
     def newBatch(self, comment = '') :
-        newBatchQuery = ('insert into batches (recipe_id, start_date, comment) values (%s, %s, %s)')
+        newBatchQuery = ('insert into batches (recipe_id, start_date, comments) values (%s, %s, %s)')
         self.dbCursor.execute(newBatchQuery, (self.recipeId, datetime.datetime.now(), comment))
         batchId = self.dbCursor.lastrowid
         print ('batchId', batchId)
