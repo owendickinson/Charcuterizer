@@ -93,8 +93,10 @@ class Recipe :
         for minHumDict, maxHumDict in zip(self.minimumHumidities[startingStage:], self.maximumHumidities[startingStage:]) :
             humidityRanges.append((minHumDict['min_humidity'], maxHumDict['max_humidity']))
         durationValues = []
+        print('self.durations[startingStage:]', self.durations[startingStage:])
         for durationDict in self.durations[startingStage:] :
             durationValues.append(durationDict['duration'])
+        print('durationValues', durationValues)
 
         schedule = Schedule(durationValues, tempRanges, humidityRanges)
         return schedule
