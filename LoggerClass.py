@@ -47,6 +47,7 @@ class Logger :
         self.loadRunningBatchLog()
         heartbeatQuery = ('update logs_for_batches set time_last_alive = %s where id = %s')
         self.dbCursor.execute(heartbeatQuery, (datetime.datetime.now(), self.runningBatchLog['id']))
+        self.dbConnection.commit()
 
     def completedStage(self) :
         self.loadRunningBatchLog()
@@ -55,6 +56,7 @@ class Logger :
             nextStageCompleted = self.runningBatchLog['last_stage_completed'] + 1
         completedStageQuery = ('update logs_for_batches set time_last_alive = %s, time_last_stage_completed = %s, last_stage_completed = %s where id = %s')
         self.dbCursor.execute(completedStageQuery, (datetime.datetime.now(), datetime.datetime.now(), nextStageCompleted))
+        self.dbConnection.commit()
 
     def newBatch(self) :
         newBatchQuery = ('insert into batches (recipe_id, start_date) values (%s, %s)')
