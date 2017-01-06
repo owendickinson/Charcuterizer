@@ -7,3 +7,13 @@ recipe.connectToDb()
 
 recipe.loadInfoForRecipe()
 recipe.loadInfoForStages()
+
+schedule = recipe.makeScheduleForRecipe()
+print ('{}\n{}\n{}\n'.format(schedule.transitionTimes,
+                             schedule.temperatureRanges,
+                             schedule.humidityRanges))
+
+schedule = recipe.makeScheduleForRecipe(startingStage=1)
+print ('{}\n{}\n{}\n'.format(schedule.transitionTimes,
+                             schedule.temperatureRanges,
+                             schedule.humidityRanges))
