@@ -117,8 +117,8 @@ class Recipe :
         else :
             schedule = self.makeScheduleForRecipe()
         stageRunningTimeOnFailure = self.logForLastBatch['time_last_alive'] - self.logForLastBatch['time_last_stage_completed']
-        for transitionTime in schedule.transitionTimes :
-            transitionTime -= stageRunningTimeOnFailure
+        for transitionTimeIndex, transitionTime in enumerate(schedule.transitionTimes) :
+            schedule.transitionTimes[transitionTimeIndex] = transitionTime - stageRunningTimeOnFailure
         return schedule
 
 
