@@ -111,9 +111,9 @@ class Recipe :
     def makeScheduleForinterruptedRecipe(self, batchId = None) :
         self.loadLogForBatch(batchId)
         if self.logForLastBatch['last_stage_completed'] is not None :
-            schedule = makeScheduleForRecipe(startingStage = self.logForLastBatch['last_stage_completed'] + 1)
+            schedule = self.makeScheduleForRecipe(startingStage = self.logForLastBatch['last_stage_completed'] + 1)
         else :
-            schedule = makeScheduleForRecipe()
+            schedule = self.makeScheduleForRecipe()
         stageRunningTimeOnFailure = self.logForLastBatch['time_last_alive'] - self.logForLastBatch['time_last_stage_completed']
         for transitionTime in schedule.transitionTimes :
             transitionTime -= stageRunningTimeOnFailure
