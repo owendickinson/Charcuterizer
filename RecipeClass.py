@@ -106,15 +106,15 @@ class Recipe :
     def loadLogForLastBatch(self) :
         logQuery = ('select logs_for_batches.* from batches left join logs_for_batches on logs_for_batches.batch_id = batches.id where batches.recipe_id = %s order by batches.id limit 1;')
         self.dbCursor.execute(logQuery, (self.recipeId,))
-        self.loadLogForBatch = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
+        self.logForLastBatch = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
 
     def makeScheduleForinterruptedRecipe(self, batchId = None) :
         self.loadLogForBatch(batchId)
-        if self.log['last_stage_completed'] is not None :
-            schedule = makeScheduleForRecipe(startingStage = self.log['last_stage_completed'] + 1)
+        if self.logForLastBatch['last_stage_completed'] is not None :
+            schedule = makeScheduleForRecipe(startingStage = self.logForLastBatch['last_stage_completed'] + 1)
         else :
             schedule = makeScheduleForRecipe()
-        stageRunningTimeOnFailure = self.log['time_last_alive'] - self.log['time_last_stage_completed']
+        stageRunningTimeOnFailure = self.logForLastBatch['time_last_alive'] - self.logForLastBatch['time_last_stage_completed']
         for transitionTime in schedule.transitionTimes :
             transitionTime -= stageRunningTimeOnFailure
         return schedule
