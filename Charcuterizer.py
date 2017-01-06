@@ -36,8 +36,14 @@ recipe.connectToDb()
 recipe.loadInfoForRecipe()
 recipe.loadInfoForStages()
 
+
+recovering = True
 # Use the recipe to create a schedule
-schedule = recipe.makeScheduleForRecipe()
+schedule = None
+if recovering :
+    schedule = recipe.makeScheduleForInterruptedRecipe()
+else :
+    schedule = recipe.makeScheduleForRecipe()
 # OLD CODE => schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)], [(60, 70),(80, 90),(65, 85)])
 schedule.printVariables()
 print ("Current humidity range is {}".format(schedule.getHumidityRange()))

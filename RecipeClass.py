@@ -114,7 +114,7 @@ class Recipe :
         self.dbCursor.execute(logQuery, (self.recipeId,))
         self.logForLastBatch = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
 
-    def makeScheduleForinterruptedRecipe(self, batchId = None) :
+    def makeScheduleForInterruptedRecipe(self, batchId = None) :
         self.loadLogForBatch(batchId)
         if self.logForLastBatch['last_stage_completed'] is not None :
             schedule = self.makeScheduleForRecipe(startingStage = self.logForLastBatch['last_stage_completed'] + 1)
