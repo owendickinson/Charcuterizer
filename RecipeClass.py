@@ -106,7 +106,7 @@ class Recipe :
             self.loadLogForLastBatch()
 
     def loadLogForLastBatch(self) :
-        logQuery = ('select logs_for_batches.* from batches left join logs_for_batches on logs_for_batches.batch_id = batches.id where batches.recipe_id = %s order by batches.id limit 1;')
+        logQuery = ('select logs_for_batches.* from batches left join logs_for_batches on logs_for_batches.batch_id = batches.id where batches.recipe_id = %s order by batches.id desc limit 1;')
         self.dbCursor.execute(logQuery, (self.recipeId,))
         self.logForLastBatch = dict(zip(self.dbCursor.column_names, self.dbCursor.fetchone()))
 
