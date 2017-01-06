@@ -62,6 +62,8 @@ try :
         dhc.switchDehumidifier()
         tc.switchHeater()
 
+
+
         time.sleep(60)
 except KeyboardInterrupt :
     print ("KeyboardInterrupt encountered")
