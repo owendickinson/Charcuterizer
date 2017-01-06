@@ -54,16 +54,16 @@ logger.newBatch()
 # number dusing the BROADCOM numbering scheme
 hts = HumTemSensor(18)
 
-tc = HeaterController(hts, (20, 21), 14)
+tc = HeaterController(hts, schedule.getTemperatureRange(), 14)
 tc.printVariables()
 
 #create an object of type HumidifierController
-hc = HumidifierController(hts, targetHumidityRange, 15)
+hc = HumidifierController(hts, schedule.getHumidityRange(), 15)
 hc.printVariables()
 hc.querySensor()
 
 #create an object of type HumidifierController
-dhc = DehumidifierController(hts, targetHumidityRange, 17)
+dhc = DehumidifierController(hts, schedule.getHumidityRange(), 17)
 dhc.printVariables()
 dhc.querySensor()
 
