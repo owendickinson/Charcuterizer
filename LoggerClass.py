@@ -54,5 +54,6 @@ class Logger :
         newBatchQuery = ('insert into batches (recipe_id, start_date) values (%s, %s)')
         self.dbCursor.execute(newBatchQuery, (self.recipeId, datetime.datetime.now()))
         batchId = self.dbCursor.lastrowid
+        print ('batchId', batchId)
         newBatchLogQuery = ('insert into logs_for_batches (batch_id, time_last_alive) values (%s, %s)')
         self.dbCursor.execute(newBatchLogQuery, (batchId, datetime.datetime.now()))
