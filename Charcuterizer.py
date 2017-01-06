@@ -33,6 +33,8 @@ import datetime
 # create a Recipe (loads recipe data from the database)
 recipe = Recipe(1)
 recipe.connectToDb()
+recipe.loadInfoForRecipe()
+recipe.loadInfoForStages()
 
 # Use the recipe to create a schedule
 schedule = recipe.makeScheduleForRecipe()
