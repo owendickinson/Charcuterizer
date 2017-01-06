@@ -84,18 +84,18 @@ class Recipe :
         for row in self.dbCursor :
             self.durations.append(self.makeDictionaryFromRow(row))
 
-        def makeScheduleForRecipe(self, startingStage = 0) :
-            tempRanges = []
-            for minTempDict, maxTempDict in zip(self.minimumTemperatures[startingStage:], self.maximumTemperatures[startingStage:]) :
-                tempRanges.append((minTempDict['min_temp'], maxTempDict['max_temp']))
-            humidityRanges = []
-            for minHumDict, maxHumDict in zip(self.minimumHumidities[startingStage:], self.maximumHumidities[startingStage:]) :
-                humidityRanges.append((minHumDict['min_humidity'], maxHumDict['max_humidity']))
-            durationValues = []
-            for durationDict in self.durations[startingStage:] :
-                durationValues.append(durationDict['duration'])
+    def makeScheduleForRecipe(self, startingStage = 0) :
+        tempRanges = []
+        for minTempDict, maxTempDict in zip(self.minimumTemperatures[startingStage:], self.maximumTemperatures[startingStage:]) :
+            tempRanges.append((minTempDict['min_temp'], maxTempDict['max_temp']))
+        humidityRanges = []
+        for minHumDict, maxHumDict in zip(self.minimumHumidities[startingStage:], self.maximumHumidities[startingStage:]) :
+            humidityRanges.append((minHumDict['min_humidity'], maxHumDict['max_humidity']))
+        durationValues = []
+        for durationDict in self.durations[startingStage:] :
+            durationValues.append(durationDict['duration'])
 
-            schedule = Schedule(durationValues, tempRanges, humidityRanges)
-            return schedule
+        schedule = Schedule(durationValues, tempRanges, humidityRanges)
+        return schedule
 
 # select min_temp.value as min_temp from temperatures_for_recipes left join min_temp on min_temp.id = temperatures_for_recipes.min_temp_id where temperatures_for_recipes.recipe_id = 1;
