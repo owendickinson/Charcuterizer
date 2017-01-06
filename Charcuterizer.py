@@ -30,14 +30,17 @@ from LoggerClass import Logger
 import time
 import datetime
 
+#### SOFTWARE SETUP
+
 # create a Recipe (loads recipe data from the database)
+# OWEN EDIT HERE
 recipe = Recipe(1)
 recipe.connectToDb()
 recipe.loadInfoForRecipe()
 recipe.loadInfoForStages()
 
-
-recovering = True
+# OWEN EDIT HERE
+recovering = True # CHANGE TO: False if not recovering
 # Use the recipe to create a schedule
 schedule = None
 if recovering :
@@ -54,7 +57,10 @@ logger = Logger(recipe.recipeId)
 
 # create a new batch and batch log for this recipe
 logger.connectToDb()
+# OWEN EDIT HERE (MAYBE)
 logger.newBatch('Test With Comment')
+
+#### SENSOR AND HARDWARE CONTROLLER SETUP
 
 # create an object of type HumTemSensor, the first argument is the GPIO pin
 # number dusing the BROADCOM numbering scheme
@@ -73,7 +79,7 @@ dhc = DehumidifierController(hts, schedule.getHumidityRange(), 17)
 dhc.printVariables()
 dhc.querySensor()
 
-try :
+try : # this construct enables interruption of program using 'Ctrl-C'
     while not schedule.isComplete() :
         hc.targetHumidityRange = schedule.getHumidityRange()
         dhc.targetHumidityRange = schedule.getHumidityRange()
@@ -83,12 +89,13 @@ try :
         dhc.switchDehumidifier()
         tc.switchHeater()
 
-        if schedule.isUpdateRequired() :
+        if schedule.isUpdateRequired() : # stage has changed
             logger.completedStage()
         else :
             print ('heartbeat')
             logger.heartbeat()
 
+        # OWEN EDIT HERE (MAYBE)
         time.sleep(60)
 except KeyboardInterrupt :
     print ("KeyboardInterrupt encountered")
