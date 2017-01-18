@@ -1,0 +1,128 @@
+<html>
+
+<head>
+<title>Charcuterizer Recipe Creator</title>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/excite-bike/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script type='text/javascript'>
+
+class RecipeStage {
+
+  constructor(){
+    this.columnNames = [ 'Stage	Duration (days)',	'Min. Temp. (C)',	'Max. Temp. (C)',	'Min. Hum. (%)',	'Max. Hum. (%)' ]
+  }
+
+  genHeaderRow(){
+    var row =
+  }
+
+}
+
+class RecipeForm {
+
+  constructor (){
+    this.numStages = 1
+  }
+
+
+
+}
+
+function saveNewRecipe() {
+  console.log('POSTING!');
+  fetch('http://localhost/~hughdickinson/CharcuterizerWebInterface/databaseInterface.php', {
+    method: 'POST',
+    body: new FormData(document.getElementById('recipeForm')),
+    mode: 'same-origin',
+    redirect: 'follow'
+  }).then(function(promisedResponse) {
+    return promisedResponse.text();
+  }).then(function(responseText){
+    console.log(responseText);
+  }).catch(function(){
+    console.log('Caught error!');
+  });
+}
+
+function addNewStage(){
+  var numRows = $('#stagesTable tr').length;
+    var newRow = $("#stageZeroRow").clone().find("input").each(function() {
+      $(this).attr({
+        'name': function(_, name) { return name + numRows },
+        'value': ''
+      });
+    }).end().appendTo("#stagesTable");
+
+    newRow.attr({
+      'id' : ''
+    });
+
+    newRow.find('td:first').text = numRows;
+}
+
+</script>
+
+</head>
+
+<body class="ui-widget">
+
+<h1>Charcuterizer Recipe Creator</h1>
+
+<form id='recipeForm'>
+<input type='text' name='recipeName' value='Recipe Name' class='ui-widget'/>
+<button type='button' name='saveRecipe' value='saveRecipe' onclick='saveNewRecipe()' class='ui-button'>Save</button>
+<button type='button' name='addStage' value='addNewStage' onclick='addNewStage()' class='ui-button'>Add New Stage</button>
+<table id='stagesTable' class='ui-widget'>
+  <thead class="ui-widget-header">
+    <td>
+      Stage
+    </td>
+    <td>
+      Duration (days)
+    </td>
+    <td>
+      Min. Temp. (C)
+    </td>
+    <td>
+      Max. Temp. (C)
+    </td>
+    <td>
+      Min. Hum. (%)
+    </td>
+    <td>
+      Max. Hum. (%)
+    </td>
+  </th>
+  <tbody class="ui-widget-content" id='stagesTableBody'>
+  <tr id='stageZeroRow'>
+      <td>
+        1
+      </td>
+      <td>
+        <input type='number' name='durationDays' min="1" max="365"/>
+      </td>
+      <td>
+        <input type='number' name='minTempC' min="0" max="70"/>
+      </td>
+      <td>
+        <input type='number' name='maxTempC' min="0" max="70"/>
+      </td>
+      <td>
+        <input type='number' name='minHumPc' min="0" max="100"/>
+      </td>
+      <td>
+        <input type='number' name='maxHumPc' min="0" max="100"/>
+      </td>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+</form>
+
+</body>
+
+</html>
