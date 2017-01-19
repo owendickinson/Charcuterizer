@@ -1,128 +1,129 @@
 <html>
 
 <head>
-<title>Charcuterizer Recipe Creator</title>
+  <title>Charcuterizer Recipe Creator</title>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/excite-bike/jquery-ui.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css">
+  <link rel="stylesheet" href="charcuterizer.css">
 
-<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script type='text/javascript'>
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script type='text/javascript'>
 
-class RecipeStage {
+  var recipeForm;
 
-  constructor(){
-    this.columnNames = [ 'Stage	Duration (days)',	'Min. Temp. (C)',	'Max. Temp. (C)',	'Min. Hum. (%)',	'Max. Hum. (%)' ]
-  }
-
-  genHeaderRow(){
-    var row =
-  }
-
-}
-
-class RecipeForm {
-
-  constructor (){
-    this.numStages = 1
-  }
-
-
-
-}
-
-function saveNewRecipe() {
-  console.log('POSTING!');
-  fetch('http://localhost/~hughdickinson/CharcuterizerWebInterface/databaseInterface.php', {
-    method: 'POST',
-    body: new FormData(document.getElementById('recipeForm')),
-    mode: 'same-origin',
-    redirect: 'follow'
-  }).then(function(promisedResponse) {
-    return promisedResponse.text();
-  }).then(function(responseText){
-    console.log(responseText);
-  }).catch(function(){
-    console.log('Caught error!');
+  $( window ).on('load', function(){
+    recipeForm = new RecipeForm;
   });
-}
 
-function addNewStage(){
-  var numRows = $('#stagesTable tr').length;
-    var newRow = $("#stageZeroRow").clone().find("input").each(function() {
-      $(this).attr({
-        'name': function(_, name) { return name + numRows },
-        'value': ''
+  class RecipeStage {
+
+    constructor(){
+      this.columnNames = [ 'Stage', 'Duration (days)',	'Min. Temp. (C)',	'Max. Temp. (C)',	'Min. Hum. (%)',	'Max. Hum. (%)' ]
+      this.inputNames = ['durationDays', 'minTempC', 'maxTempC', 'minHumPc', 'maxHumPc'];
+      this.inputTypes = ['number', 'number', 'number', 'number', 'number'];
+      this.inputRanges = [[1, 365], [0, 70], [0, 70], [0, 100], [0, 100]];
+    }
+
+    genHeaderRow(){
+      console.log('Called genHeaderRow');
+      var row = $("<thead/>",{
+        "class" : "ui-widget-header"
       });
-    }).end().appendTo("#stagesTable");
 
-    newRow.attr({
-      'id' : ''
+      for(var columnName of this.columnNames){
+        $("<td/>",{
+          'class' : 'generalTableCell',
+          "text" : columnName
+        }).appendTo(row);
+      }
+      return row;
+    }
+
+    genStageRow(stage){
+      console.log('Called genStageRow');
+      var row = $('<tr/>');
+      $('<td/>').text(stage).appendTo(row);
+
+      for(var iField=0; iField < this.inputNames.length; iField++){
+        var field = $("<td/>",{
+          'class' : 'generalTableCell'
+        });
+        $('<input/>', {
+          'name' : this.inputNames[iField] + String(stage),
+          'type' : this.inputTypes[iField],
+          'min' : this.inputRanges[iField][0],
+          'max' : this.inputRanges[iField][1],
+          'width' : '100%'
+        }).appendTo(field);
+        field.appendTo(row);
+      }
+      return row;
+    }
+
+  }
+
+  class RecipeForm {
+
+    constructor (){
+      this.recipeStageGenerator = new RecipeStage;
+      this.numStages = 1
+      this.addTableHeader();
+      this.addNewStage(this.numStages);
+    }
+
+    addTableHeader(){
+      this.recipeStageGenerator.genHeaderRow().appendTo($('#stagesTable'));
+    }
+
+    addNewStage(){
+      this.recipeStageGenerator.genStageRow(this.numStages).appendTo($('#stagesTableBody'));
+      this.numStages++;
+    }
+
+  }
+
+  function saveNewRecipe() {
+    console.log('POSTING!');
+    fetch('http://localhost/~hughdickinson/CharcuterizerWebInterface/databaseInterface.php', {
+      method: 'POST',
+      body: new FormData(document.getElementById('recipeForm')),
+      mode: 'same-origin',
+      redirect: 'follow'
+    }).then(function(promisedResponse) {
+      return promisedResponse.text();
+    }).then(function(responseText){
+      console.log(responseText);
+    }).catch(function(){
+      console.log('Caught error!');
     });
+  }
 
-    newRow.find('td:first').text = numRows;
-}
+  function addNewStage(){
+    recipeForm.addNewStage();
+  }
 
-</script>
+  </script>
 
 </head>
 
 <body class="ui-widget">
 
-<h1>Charcuterizer Recipe Creator</h1>
+  <h1>Charcuterizer Recipe Creator</h1>
+  <div>
+    <form id='recipeForm'>
+      <div class='recipeFormControls'>
+        <input type='text' name='recipeName' placeholder='Recipe Name' class='ui-widget' required/>
+        <button type='button' name='saveRecipe' value='saveRecipe' onclick='saveNewRecipe()' class='ui-button'>Save Recipe</button>
+        <button type='button' name='addStage' value='addNewStage' onclick='addNewStage()' class='ui-button'>Add New Stage</button>
+      </div>
+      <table id='stagesTable' class='ui-widget generalTable'>
+        <tbody class="ui-widget-content" id='stagesTableBody'>
+        </tbody>
+      </table>
 
-<form id='recipeForm'>
-<input type='text' name='recipeName' value='Recipe Name' class='ui-widget'/>
-<button type='button' name='saveRecipe' value='saveRecipe' onclick='saveNewRecipe()' class='ui-button'>Save</button>
-<button type='button' name='addStage' value='addNewStage' onclick='addNewStage()' class='ui-button'>Add New Stage</button>
-<table id='stagesTable' class='ui-widget'>
-  <thead class="ui-widget-header">
-    <td>
-      Stage
-    </td>
-    <td>
-      Duration (days)
-    </td>
-    <td>
-      Min. Temp. (C)
-    </td>
-    <td>
-      Max. Temp. (C)
-    </td>
-    <td>
-      Min. Hum. (%)
-    </td>
-    <td>
-      Max. Hum. (%)
-    </td>
-  </th>
-  <tbody class="ui-widget-content" id='stagesTableBody'>
-  <tr id='stageZeroRow'>
-      <td>
-        1
-      </td>
-      <td>
-        <input type='number' name='durationDays' min="1" max="365"/>
-      </td>
-      <td>
-        <input type='number' name='minTempC' min="0" max="70"/>
-      </td>
-      <td>
-        <input type='number' name='maxTempC' min="0" max="70"/>
-      </td>
-      <td>
-        <input type='number' name='minHumPc' min="0" max="100"/>
-      </td>
-      <td>
-        <input type='number' name='maxHumPc' min="0" max="100"/>
-      </td>
-    </td>
-  </tr>
-</tbody>
-</table>
-
-</form>
-
+    </form>
+  </div>
 </body>
 
 </html>

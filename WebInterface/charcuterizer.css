@@ -1,0 +1,13 @@
+.generalTable {
+  margin : 10px;
+  border: 1px solid red;
+}
+
+.generalTableCell {
+  padding: 3px;
+}
+
+.recipeFormControls {
+  width: fill;
+  text-align: center;
+}
