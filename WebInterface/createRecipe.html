@@ -50,7 +50,7 @@
           'class' : 'generalTableCell'
         });
         $('<input/>', {
-          'name' : this.inputNames[iField] + String(stage),
+          'name' : this.inputNames[iField] + '[' + String(stage-1) + ']',
           'type' : this.inputTypes[iField],
           'min' : this.inputRanges[iField][0],
           'max' : this.inputRanges[iField][1],
@@ -94,6 +94,7 @@
       return promisedResponse.text();
     }).then(function(responseText){
       console.log(responseText);
+      $('<div/>').html(responseText).appendTo($('#contentDiv'));
     }).catch(function(){
       console.log('Caught error!');
     });
@@ -110,7 +111,7 @@
 <body class="ui-widget">
 
   <h1>Charcuterizer Recipe Creator</h1>
-  <div>
+  <div id='contentDiv'>
     <form id='recipeForm'>
       <div class='recipeFormControls'>
         <input type='text' name='recipeName' placeholder='Recipe Name' class='ui-widget' required/>
