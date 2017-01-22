@@ -11,7 +11,7 @@ for ($iInput = 0; $iInput < count($inputDescriptions); $iInput++){
 }
 $returnString .= '</tr>';
 for ($iStage = 0; $iStage < count($_POST['durationDays']); $iStage++){
-  $returnString .= '<tr><td>'.$iStage+1.'</td>';
+  $returnString .= '<tr><td>'.($iStage+1).'</td>';
   for ($iInput = 0; $iInput < count($inputNames); $iInput++){
     $returnString .= '<td>'.$_POST[$inputNames[$iInput]][$iStage].'<td>';
   }
