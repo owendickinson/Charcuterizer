@@ -26,7 +26,6 @@
     }
 
     genHeaderRow(){
-      console.log('Called genHeaderRow');
       var row = $("<thead/>",{
         "class" : "ui-widget-header"
       });
@@ -41,7 +40,6 @@
     }
 
     genStageRow(stage){
-      console.log('Called genStageRow');
       var row = $('<tr/>');
       $('<td/>').text(stage).appendTo(row);
 
@@ -84,7 +82,6 @@
   }
 
   function saveNewRecipe() {
-    console.log('POSTING!');
     fetch('databaseInterface.php', {
       method: 'POST',
       body: new FormData(document.getElementById('recipeForm')),
