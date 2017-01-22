@@ -18,5 +18,5 @@ for ($iStage = 0; $iStage < count($_POST['durationDays']); $iStage++){
   $returnString .= '</tr>';
 }
 
-echo $returnString.'</table>';
+echo $returnString."</table><input type='button' name='dismiss' value='Dismiss' onclick='dismissModal()' class='ui-button'>";
 ?>

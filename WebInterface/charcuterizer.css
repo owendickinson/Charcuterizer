@@ -11,3 +11,12 @@
   width: fill;
   text-align: center;
 }
+
+.modalDiv {
+  border : 1px solid black;
+  background-color: red;
+  width: 50%;
+  position: absolute;
+  top : 100px;
+  left : 100px;
+}
