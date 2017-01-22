@@ -85,7 +85,7 @@
 
   function saveNewRecipe() {
     console.log('POSTING!');
-    fetch('http://localhost/~hughdickinson/CharcuterizerWebInterface/databaseInterface.php', {
+    fetch('databaseInterface.php', {
       method: 'POST',
       body: new FormData(document.getElementById('recipeForm')),
       mode: 'same-origin',
