@@ -1,0 +1,4 @@
+SetEnv CHARC_MYSQL_HOST ""
+SetEnv CHARC_MYSQL_USER ""
+SetEnv CHARC_MYSQL_PASS ""
+SetEnv CHARC_MYSQL_DB "charcuterizer"

@@ -1,4 +1,4 @@
-create databse charcuterizer;
+create database charcuterizer;
 
 use charcuterizer;
 
@@ -51,7 +51,7 @@ telephone VARCHAR(15),
 email VARCHAR(255),
 website TEXT);
 
-create table incredients (
+create table ingredients (
 id int primary key auto_increment,
 name varchar(50) NOT NULL,
 stock int NOT NULL DEFAULT 0,
@@ -276,3 +276,39 @@ error_count
 )
 values
 (2, 0, DATE_SUB(NOW(), INTERVAL 1.5 DAY), NOW() - INTERVAL 5 MINUTE, 1);
+
+select
+recipes.name,
+min_temp.value,
+max_temp.value,
+min_humidity.value,
+max_humidity.value,
+temperatures_for_recipes.stage_in_recipe
+ from recipes left join (temperatures_for_recipes,
+humdidities_for_recipes,
+durations_for_recipes,
+min_temp, max_temp,
+min_humidity, max_humidity,
+duration,
+ingredients)
+on (recipes.id = temperatures_for_recipes.recipe_id and
+temperatures_for_recipes.min_temp_id = min_temp.id and
+temperatures_for_recipes.max_temp_id = max_temp.id and
+humdidities_for_recipes.min_humidity_id = min_humidity.id and
+humdidities_for_recipes.max_humidity_id = max_humidity.id and
+durations_for_recipes.duration_id = duration.id) where
+(temperatures_for_recipes.stage_in_recipe = humdidities_for_recipes.stage_in_recipe
+and temperatures_for_recipes.stage_in_recipe = durations_for_recipes.stage_in_recipe);
+
+select * from recipes left join (ingredients_for_recipes, ingredients, suppliers)
+on
+(recipes.id = ingredients_for_recipes.id and
+ingredients.id = ingredients_for_recipes.ingredient_id and
+suppliers.id = ingredients.supplier_id);
+
+select * from recipes left join literature on literature_id = literature.id;
+
+select * from recipes left join (batches, logs_for_batches)
+on
+(recipes.id = batches.recipe_id and
+logs_for_batches.batch_id = batches.id);
