@@ -50,6 +50,7 @@ class DehumidifierController :
         humidity = self.querySensor()
         # Is the humidity below the target range? Note same range should be used
         # for humidifier and dehumidifier target ranges
+        # Zero is left in place in case humidity buffer is desired
         if humidity > (0 + self.targetHumidityRange[1]) :
             self.activateDehumidifier()
         elif self.isDehumidifierActive :
