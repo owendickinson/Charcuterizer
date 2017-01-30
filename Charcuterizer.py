@@ -96,6 +96,6 @@ try : # this construct enables interruption of program using 'Ctrl-C'
             logger.heartbeat()
 
         # OWEN EDIT HERE (MAYBE)
-        time.sleep(60)
+        time.sleep(10)
 except KeyboardInterrupt :
     print ("KeyboardInterrupt encountered")
