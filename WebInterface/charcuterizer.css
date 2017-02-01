@@ -5,6 +5,7 @@
 
 .generalTableCell {
   padding: 3px;
+  text-align: center;
 }
 
 .recipeFormControls {
@@ -14,9 +15,11 @@
 
 .modalDiv {
   border : 1px solid black;
-  background-color: red;
-  width: 50%;
+  padding: 10px;
+  background-color: white;
+  width: auto;
   position: absolute;
   top : 100px;
   left : 100px;
+  border-radius: 10px
 }

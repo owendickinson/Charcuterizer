@@ -29,7 +29,7 @@ min_temp_id int NOT NULL,
 max_temp_id int NOT NULL,
 stage_in_recipe int NOT NULL);
 
-create table humdidities_for_recipes (
+create table humidities_for_recipes (
 id int primary key auto_increment,
 recipe_id int NOT NULL,
 min_humidity_id int NOT NULL,
@@ -118,20 +118,20 @@ max_temp_id,
 stage_in_recipe
 )
 values (
-  1,
+  (select max(id) from recipes),
   (select max(id) from min_temp),
   (select max(id) from max_temp),
   0
 );
 
-insert into humdidities_for_recipes (
+insert into humidities_for_recipes (
 recipe_id,
 min_humidity_id,
 max_humidity_id,
 stage_in_recipe
 )
 values (
-  1,
+  (select max(id) from recipes),
   (select max(id) from min_humidity),
   (select max(id) from max_humidity),
   0
@@ -143,7 +143,7 @@ duration_id,
 stage_in_recipe
 )
 values (
-  1,
+  (select max(id) from recipes),
   (select max(id) from duration),
   0
 );
@@ -161,20 +161,20 @@ insert into duration (value) values ( 21.0);
   stage_in_recipe
   )
   values (
-    1,
+    (select max(id) from recipes),
     (select max(id) from min_temp),
     (select max(id) from max_temp),
     1
   );
 
-  insert into humdidities_for_recipes (
+  insert into humidities_for_recipes (
   recipe_id,
   min_humidity_id,
   max_humidity_id,
   stage_in_recipe
   )
   values (
-    1,
+    (select max(id) from recipes),
     (select max(id) from min_humidity),
     (select max(id) from max_humidity),
     1
@@ -186,7 +186,7 @@ insert into duration (value) values ( 21.0);
   stage_in_recipe
   )
   values (
-    1,
+    (select max(id) from recipes),
     (select max(id) from duration),
     1
   );
@@ -203,20 +203,20 @@ insert into duration (value) values (42.0);
   stage_in_recipe
   )
   values (
-    1,
+    (select max(id) from recipes),
     (select max(id) from min_temp),
     (select max(id) from max_temp),
     2
   );
 
-  insert into humdidities_for_recipes (
+  insert into humidities_for_recipes (
   recipe_id,
   min_humidity_id,
   max_humidity_id,
   stage_in_recipe
   )
   values (
-    1,
+    (select max(id) from recipes),
     (select max(id) from min_humidity),
     (select max(id) from max_humidity),
     2
@@ -228,7 +228,7 @@ insert into duration (value) values (42.0);
   stage_in_recipe
   )
   values (
-    1,
+    (select max(id) from recipes),
     (select max(id) from duration),
     2
   );
@@ -285,7 +285,7 @@ min_humidity.value,
 max_humidity.value,
 temperatures_for_recipes.stage_in_recipe
  from recipes left join (temperatures_for_recipes,
-humdidities_for_recipes,
+humidities_for_recipes,
 durations_for_recipes,
 min_temp, max_temp,
 min_humidity, max_humidity,
@@ -294,10 +294,10 @@ ingredients)
 on (recipes.id = temperatures_for_recipes.recipe_id and
 temperatures_for_recipes.min_temp_id = min_temp.id and
 temperatures_for_recipes.max_temp_id = max_temp.id and
-humdidities_for_recipes.min_humidity_id = min_humidity.id and
-humdidities_for_recipes.max_humidity_id = max_humidity.id and
+humidities_for_recipes.min_humidity_id = min_humidity.id and
+humidities_for_recipes.max_humidity_id = max_humidity.id and
 durations_for_recipes.duration_id = duration.id) where
-(temperatures_for_recipes.stage_in_recipe = humdidities_for_recipes.stage_in_recipe
+(temperatures_for_recipes.stage_in_recipe = humidities_for_recipes.stage_in_recipe
 and temperatures_for_recipes.stage_in_recipe = durations_for_recipes.stage_in_recipe);
 
 select * from recipes left join (ingredients_for_recipes, ingredients, suppliers)

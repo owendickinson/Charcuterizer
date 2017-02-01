@@ -13,14 +13,15 @@ class RecipeSummary {
 
   function getStageDetails(){
     $stageQuery = "select
-    recipes.name,
-    min_temp.value,
-    max_temp.value,
-    min_humidity.value,
-    max_humidity.value,
-    temperatures_for_recipes.stage_in_recipe
+    recipes.name as recipeName,
+    min_temp.value as minTempC,
+    max_temp.value as maxTempC,
+    min_humidity.value as minHumPc,
+    max_humidity.value as maxHumPc,
+    duration.value as durationDays,
+    temperatures_for_recipes.stage_in_recipe as stage
     from recipes left join (temperatures_for_recipes,
-    humdidities_for_recipes,
+    humidities_for_recipes,
     durations_for_recipes,
     min_temp, max_temp,
     min_humidity, max_humidity,
@@ -29,11 +30,11 @@ class RecipeSummary {
     on (recipes.id = temperatures_for_recipes.recipe_id and
     temperatures_for_recipes.min_temp_id = min_temp.id and
     temperatures_for_recipes.max_temp_id = max_temp.id and
-    humdidities_for_recipes.min_humidity_id = min_humidity.id and
-    humdidities_for_recipes.max_humidity_id = max_humidity.id and
+    humidities_for_recipes.min_humidity_id = min_humidity.id and
+    humidities_for_recipes.max_humidity_id = max_humidity.id and
     durations_for_recipes.duration_id = duration.id) where
     (recipes.id = ".$this->recipeId."
-    and temperatures_for_recipes.stage_in_recipe = humdidities_for_recipes.stage_in_recipe
+    and temperatures_for_recipes.stage_in_recipe = humidities_for_recipes.stage_in_recipe
     and temperatures_for_recipes.stage_in_recipe = durations_for_recipes.stage_in_recipe)";
 
     if(!$this->stageResult = $this->dbConnection->query($stageQuery)){
@@ -48,16 +49,6 @@ class RecipeSummary {
     print json_encode($stageRows);
   }
 }
-
-// INITIAL DATABASE CONNECTION
-$database = new mysqli($_SERVER['CHARC_MYSQL_HOST'], $_SERVER['CHARC_MYSQL_USER'], $_SERVER['CHARC_MYSQL_PASS'], $_SERVER['CHARC_MYSQL_DB']);
-
-if($database->connect_errno > 0){
-  die('Unable to connect to database [' . $database->connect_error . ']');
-}
-
-$recipeSummary = new RecipeSummary($database, 1);
-$recipeSummary->getStageDetails();
 
 function echoFormData($postData){
 
@@ -81,4 +72,30 @@ function echoFormData($postData){
 
   echo $returnString."</table><input type='button' name='dismiss' value='Dismiss' onclick='dismissModal()' class='ui-button'>";
 }
+
+
+// INITIAL DATABASE CONNECTION
+$database = new mysqli($_SERVER['HTTP_CHARC_MYSQL_HOST'], $_SERVER['HTTP_CHARC_MYSQL_USER'], $_SERVER['HTTP_CHARC_MYSQL_PASS'], $_SERVER['HTTP_CHARC_MYSQL_DB']);
+
+if($database->connect_errno > 0){
+  die('Unable to connect to database [' . $database->connect_error . ']');
+}
+
+//echo 'POST';
+
+if($_POST['mode'] == 'verify'){
+  if(count($_POST) > 1){
+    print json_encode(array(0 => $_POST));
+  }
+  else{
+    print json_encode($_POST);
+  }
+}
+else{// if(_POST['mode'] == 'save'){
+  $recipeSummary = new RecipeSummary($database, 1);
+  $recipeSummary->getStageDetails();
+}
+/*else{
+echo json_encode(array(array('name' => 'NO MODE')));
+}*/
 ?>
