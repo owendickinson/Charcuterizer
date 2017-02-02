@@ -1,25 +1,25 @@
 .generalTable {
-  margin : 10px;
-  border: 1px solid red;
+    margin: 10px;
+    border: 1px solid red;
 }
 
 .generalTableCell {
-  padding: 3px;
-  text-align: center;
+    padding: 3px;
+    text-align: center;
 }
 
 .recipeFormControls {
-  width: fill;
-  text-align: center;
+    width: fill;
+    text-align: center;
 }
 
 .modalDiv {
-  border : 1px solid black;
-  padding: 10px;
-  background-color: white;
-  width: auto;
-  position: absolute;
-  top : 100px;
-  left : 100px;
-  border-radius: 10px
+    border: 1px solid black;
+    padding: 10px;
+    background-color: white;
+    width: auto;
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    border-radius: 10px
 }
