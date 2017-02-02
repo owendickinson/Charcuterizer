@@ -30,7 +30,7 @@ from LoggerClass import Logger
 import time
 import datetime
 
-#### SOFTWARE SETUP
+# SOFTWARE SETUP
 
 # create a Recipe (loads recipe data from the database)
 # OWEN EDIT HERE
@@ -40,17 +40,18 @@ recipe.loadInfoForRecipe()
 recipe.loadInfoForStages()
 
 # OWEN EDIT HERE
-recovering = True # CHANGE TO: False if not recovering
+recovering = True  # CHANGE TO: False if not recovering
 # Use the recipe to create a schedule
 schedule = None
-if recovering :
+if recovering:
     schedule = recipe.makeScheduleForInterruptedRecipe()
-else :
+else:
     schedule = recipe.makeScheduleForRecipe()
-# OLD CODE => schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)], [(60, 70),(80, 90),(65, 85)])
+# OLD CODE => schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)],
+# [(60, 70),(80, 90),(65, 85)])
 schedule.printVariables()
-print ("Current humidity range is {}".format(schedule.getHumidityRange()))
-print ("Current temperature range is {}".format(schedule.getTemperatureRange()))
+print("Current humidity range is {}".format(schedule.getHumidityRange()))
+print("Current temperature range is {}".format(schedule.getTemperatureRange()))
 
 # create a Logger object to monitor progress
 logger = Logger(recipe.recipeId)
@@ -60,7 +61,7 @@ logger.connectToDb()
 # OWEN EDIT HERE (MAYBE)
 logger.newBatch('Test With Comment')
 
-#### SENSOR AND HARDWARE CONTROLLER SETUP
+# SENSOR AND HARDWARE CONTROLLER SETUP
 
 # create an object of type HumTemSensor, the first argument is the GPIO pin
 # number dusing the BROADCOM numbering scheme
@@ -69,18 +70,18 @@ hts = HumTemSensor(18)
 tc = HeaterController(hts, schedule.getTemperatureRange(), 14)
 tc.printVariables()
 
-#create an object of type HumidifierController
+# create an object of type HumidifierController
 hc = HumidifierController(hts, schedule.getHumidityRange(), 15)
 hc.printVariables()
 hc.querySensor()
 
-#create an object of type HumidifierController
+# create an object of type HumidifierController
 dhc = DehumidifierController(hts, schedule.getHumidityRange(), 17)
 dhc.printVariables()
 dhc.querySensor()
 
-try : # this construct enables interruption of program using 'Ctrl-C'
-    while not schedule.isComplete() :
+try:  # this construct enables interruption of program using 'Ctrl-C'
+    while not schedule.isComplete():
         hc.targetHumidityRange = schedule.getHumidityRange()
         dhc.targetHumidityRange = schedule.getHumidityRange()
         tc.targetTemperatureRange = schedule.getTemperatureRange()
@@ -89,13 +90,13 @@ try : # this construct enables interruption of program using 'Ctrl-C'
         dhc.switchDehumidifier()
         tc.switchHeater()
 
-        if schedule.isUpdateRequired() : # stage has changed
+        if schedule.isUpdateRequired():  # stage has changed
             logger.completedStage()
-        else :
-            print ('heartbeat')
+        else:
+            print('heartbeat')
             logger.heartbeat()
 
         # OWEN EDIT HERE (MAYBE)
         time.sleep(10)
-except KeyboardInterrupt :
-    print ("KeyboardInterrupt encountered")
+except KeyboardInterrupt:
+    print("KeyboardInterrupt encountered")

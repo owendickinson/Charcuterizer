@@ -1,277 +1,280 @@
 <html>
 
 <head>
-  <title>Charcuterizer Recipe Creator</title>
+    <title>Charcuterizer Recipe Creator</title>
 
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css">
-  <link rel="stylesheet" href="charcuterizer.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css">
+    <link rel="stylesheet" href="charcuterizer.css">
 
-  <script src="https://raw.githubusercontent.com/github/fetch/master/fetch.js"></script>
-  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <script type='text/javascript'>
+    <script src="https://raw.githubusercontent.com/github/fetch/master/fetch.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script type='text/javascript'>
+        var recipeForm;
 
-  var recipeForm;
-
-  $( window ).on('load', function(){
-    recipeForm = new RecipeForm;
-  });
-
-  class RecipeVariableMaps{
-
-    static getHRForFormName(formName){
-      let hrForFormNameMap = {
-        'recipeName' : 'Recipe Name',
-        'minTempC' : 'Min. Temp. (C)',
-        'maxTempC' : 'Max. Temp. (C)',
-        'minHumPc' : 'Min. Hum. (%)',
-        'maxHumPc': 'Max. Hum. (%)',
-        'durationDays' : 'Duration (days)',
-        'stage': 'Stage'
-      };
-
-      return hrForFormNameMap[formName];
-    }
-
-    static getStandardColumnsInOrder(){
-      let standardColumnOrder = [ 'stage', 'durationDays', 'minTempC', 'maxTempC', 'minHumPc', 'maxHumPc' ];
-      return standardColumnOrder;
-    }
-
-  }
-
-  class RecipeSummary{
-
-    constructor(summaryJson, targetElement){
-      this.summaryJson = summaryJson;
-      this.columnNames = Object.keys(this.summaryJson[0]);
-      this.summaryTable = null;
-      this.targetElement = targetElement;
-    }
-
-    renderSummaryHeader(){
-      this.targetElement.append($('<h2/>').text('Please verify that you entered the correct information.'));
-    }
-
-    renderRecipeName(){
-      this.targetElement.append($('<h3/>').text('Recipe Name: ' + this.summaryJson[0]['recipeName']));
-    }
-
-    renderSummaryTable(){
-      if(this.summaryTable){
-        this.summaryTable.empty();
-      }
-      else{
-        this.summaryTable = $('<table/>').addClass('ui-widget generalTable');
-      }
-      this.renderSummaryHeaderRow();
-      for(var iRow = 0; iRow < this.summaryJson.length; ++iRow){
-        this.renderSummaryRow(iRow);
-      }
-      this.summaryTable.appendTo(this.targetElement);
-    }
-
-    renderSummaryHeaderRow(){
-      var header = $("<thead/>",{
-        "class" : "ui-widget-header"
-      });
-
-      for(var formName of RecipeVariableMaps.getStandardColumnsInOrder()){
-        $("<td/>",{
-          'class' : 'generalTableCell',
-          "text" : RecipeVariableMaps.getHRForFormName(formName)
-        }).appendTo(header);
-      }
-
-      header.appendTo(this.summaryTable);
-    }
-
-    renderSummaryRow(iRow){
-      var row = $("<tr/>");
-
-      for(var columnName of RecipeVariableMaps.getStandardColumnsInOrder()){
-        $('<td/>',{
-          'class' : 'generalTableCell',
-          'text' : this.summaryJson[iRow][columnName]
-        }).appendTo(row);
-      }
-
-      row.appendTo(this.summaryTable);
-    }
-
-    renderChangeButton(){
-      var dismissButton = $('<button/>',{
-        'value' : 'Dismiss',
-        'onclick' : 'dismissModal()'
-      }).text('Change Recipe').addClass('ui-button');
-      dismissButton.appendTo(this.targetElement);
-    }
-
-    renderCommitButton(){
-      var dismissButton = $('<button/>',{
-        'value' : 'Dismiss',
-        'onclick' : 'saveNewRecipe()'
-      }).text('Save Recipe').addClass('ui-button');
-      dismissButton.appendTo(this.targetElement);
-    }
-
-  }
-
-  class RecipeStage {
-
-    constructor(){
-      this.columnNames = [ 'Stage', 'Duration (days)',	'Min. Temp. (C)',	'Max. Temp. (C)',	'Min. Hum. (%)',	'Max. Hum. (%)' ]
-      this.inputNames = ['durationDays', 'minTempC', 'maxTempC', 'minHumPc', 'maxHumPc'];
-      this.inputTypes = ['number', 'number', 'number', 'number', 'number'];
-      this.inputRanges = [[1, 365], [0, 70], [0, 70], [0, 100], [0, 100]];
-    }
-
-    genHeaderRow(){
-      var row = $("<thead/>",{
-        "class" : "ui-widget-header"
-      });
-
-      for(var columnName of this.columnNames){
-        $("<td/>",{
-          'class' : 'generalTableCell',
-          "text" : columnName
-        }).appendTo(row);
-      }
-      return row;
-    }
-
-    genStageRow(stage){
-      var row = $('<tr/>');
-      var stageCell = $('<td/>').text(stage);
-      stageCell.append($('<input/>',{
-        'name': 'stage',
-        'type': 'hidden',
-        'value': stage
-      }));
-      stageCell.appendTo(row);
-
-      for(var iField=0; iField < this.inputNames.length; iField++){
-        var field = $("<td/>",{
-          'class' : 'generalTableCell'
+        $(window).on('load', function() {
+            recipeForm = new RecipeForm;
         });
-        $('<input/>', {
-          'name' : this.inputNames[iField] + '[' + String(stage-1) + ']',
-          'type' : this.inputTypes[iField],
-          'min' : this.inputRanges[iField][0],
-          'max' : this.inputRanges[iField][1],
-          'width' : '100%'
-        }).appendTo(field);
-        field.appendTo(row);
-      }
-      return row;
-    }
 
-  }
+        class RecipeVariableMaps {
 
-  class RecipeForm {
+            static getHRForFormName(formName) {
+                let hrForFormNameMap = {
+                    'recipeName': 'Recipe Name',
+                    'minTempC': 'Min. Temp. (C)',
+                    'maxTempC': 'Max. Temp. (C)',
+                    'minHumPc': 'Min. Hum. (%)',
+                    'maxHumPc': 'Max. Hum. (%)',
+                    'durationDays': 'Duration (days)',
+                    'stage': 'Stage'
+                };
 
-    constructor (){
-      this.recipeStageGenerator = new RecipeStage;
-      this.numStages = 1
-      this.addTableHeader();
-      this.addNewStage(this.numStages);
-    }
+                return hrForFormNameMap[formName];
+            }
 
-    addTableHeader(){
-      this.recipeStageGenerator.genHeaderRow().appendTo($('#stagesTable'));
-    }
+            static getStandardColumnsInOrder() {
+                let standardColumnOrder = ['stage', 'durationDays', 'minTempC', 'maxTempC', 'minHumPc', 'maxHumPc'];
+                return standardColumnOrder;
+            }
 
-    addNewStage(){
-      this.recipeStageGenerator.genStageRow(this.numStages).appendTo($('#stagesTableBody'));
-      this.numStages++;
-    }
+        }
 
-  }
+        class RecipeSummary {
 
-  function verifyNewRecipe() {
-    var recipeData = new FormData(document.getElementById('recipeForm'));
-    recipeData.append('mode', 'verify');
-    fetch('databaseInterface.php', {
-      method: 'POST',
-      body: recipeData,
-      mode: 'same-origin',
-      redirect: 'follow'
-    }).then(function(promisedResponse) {
-      return promisedResponse.json();
-    }).then(function(responseJson){
-      console.log(responseJson);
-      var summaryModalDiv = $('<div/>', {
-        'id' :'recipeSummary'
-      }).addClass('modalDiv');
-      var recipeSummary = new RecipeSummary(responseJson, summaryModalDiv);
-      recipeSummary.renderSummaryHeader();
-      recipeSummary.renderRecipeName();
-      recipeSummary.renderSummaryTable();
-      recipeSummary.renderChangeButton();
-      recipeSummary.renderCommitButton();
-      summaryModalDiv.appendTo($('body'));
-    }).catch(function(e){
-      console.log(e);
-    });
-  }
+            constructor(summaryJson, targetElement) {
+                this.summaryJson = summaryJson;
+                this.columnNames = Object.keys(this.summaryJson[0]);
+                this.summaryTable = null;
+                this.targetElement = targetElement;
+            }
 
-  function saveNewRecipe() {
-    dismissModal();
-    var recipeData = new FormData(document.getElementById('recipeForm'));
-    recipeData.append('mode', 'save');
-    fetch('databaseInterface.php', {
-      method: 'POST',
-      body: recipeData,
-      mode: 'same-origin',
-      redirect: 'follow'
-    }).then(function(promisedResponse) {
-      return promisedResponse.json();
-    }).then(function(responseJson){
-      console.log(responseJson);
-      var summaryModalDiv = $('<div/>', {
-        'id' :'recipeSummary'
-      }).addClass('modalDiv');
-      var recipeSummary = new RecipeSummary(responseJson, summaryModalDiv);
-      recipeSummary.renderSummaryHeader();
-      recipeSummary.renderRecipeName();
-      recipeSummary.renderSummaryTable();
-      recipeSummary.renderChangeButton();
-      recipeSummary.renderCommitButton();
-      summaryModalDiv.appendTo($('body'));
-    }).catch(function(){
-      console.log('Caught error!');
-    });
-  }
+            renderSummaryHeader() {
+                this.targetElement.append($('<h2/>').text('Please verify that you entered the correct information.'));
+            }
 
-  function addNewStage(){
-    recipeForm.addNewStage();
-  }
+            renderRecipeName() {
+                this.targetElement.append($('<h3/>').text('Recipe Name: ' + this.summaryJson[0]['recipeName']));
+            }
 
-  function dismissModal(){
-    $('#recipeSummary').remove();
-  }
+            renderSummaryTable() {
+                if (this.summaryTable) {
+                    this.summaryTable.empty();
+                } else {
+                    this.summaryTable = $('<table/>').addClass('ui-widget generalTable');
+                }
+                this.renderSummaryHeaderRow();
+                for (var iRow = 0; iRow < this.summaryJson.length; ++iRow) {
+                    this.renderSummaryRow(iRow);
+                }
+                this.summaryTable.appendTo(this.targetElement);
+            }
 
-  </script>
+            renderSummaryHeaderRow() {
+                var header = $("<thead/>", {
+                    "class": "ui-widget-header"
+                });
+
+                for (var formName of RecipeVariableMaps.getStandardColumnsInOrder()) {
+                    $("<td/>", {
+                        'class': 'generalTableCell',
+                        "text": RecipeVariableMaps.getHRForFormName(formName)
+                    }).appendTo(header);
+                }
+
+                header.appendTo(this.summaryTable);
+            }
+
+            renderSummaryRow(iRow) {
+                var row = $("<tr/>");
+
+                for (var columnName of RecipeVariableMaps.getStandardColumnsInOrder()) {
+                    $('<td/>', {
+                        'class': 'generalTableCell',
+                        'text': this.summaryJson[iRow][columnName]
+                    }).appendTo(row);
+                }
+
+                row.appendTo(this.summaryTable);
+            }
+
+            renderChangeButton() {
+                var dismissButton = $('<button/>', {
+                    'value': 'Dismiss',
+                    'onclick': 'dismissModal()'
+                }).text('Change Recipe').addClass('ui-button');
+                dismissButton.appendTo(this.targetElement);
+            }
+
+            renderCommitButton() {
+                var dismissButton = $('<button/>', {
+                    'value': 'Dismiss',
+                    'onclick': 'saveNewRecipe()'
+                }).text('Save Recipe').addClass('ui-button');
+                dismissButton.appendTo(this.targetElement);
+            }
+
+        }
+
+        class RecipeStage {
+
+            constructor() {
+                this.columnNames = ['Stage', 'Duration (days)', 'Min. Temp. (C)', 'Max. Temp. (C)', 'Min. Hum. (%)', 'Max. Hum. (%)']
+                this.inputNames = ['durationDays', 'minTempC', 'maxTempC', 'minHumPc', 'maxHumPc'];
+                this.inputTypes = ['number', 'number', 'number', 'number', 'number'];
+                this.inputRanges = [
+                    [1, 365],
+                    [0, 70],
+                    [0, 70],
+                    [0, 100],
+                    [0, 100]
+                ];
+            }
+
+            genHeaderRow() {
+                var row = $("<thead/>", {
+                    "class": "ui-widget-header"
+                });
+
+                for (var columnName of this.columnNames) {
+                    $("<td/>", {
+                        'class': 'generalTableCell',
+                        "text": columnName
+                    }).appendTo(row);
+                }
+                return row;
+            }
+
+            genStageRow(stage) {
+                var row = $('<tr/>');
+                var stageCell = $('<td/>').text(stage);
+                stageCell.append($('<input/>', {
+                    'name': 'stage',
+                    'type': 'hidden',
+                    'value': stage
+                }));
+                stageCell.appendTo(row);
+
+                for (var iField = 0; iField < this.inputNames.length; iField++) {
+                    var field = $("<td/>", {
+                        'class': 'generalTableCell'
+                    });
+                    $('<input/>', {
+                        'name': this.inputNames[iField] + '[' + String(stage - 1) + ']',
+                        'type': this.inputTypes[iField],
+                        'min': this.inputRanges[iField][0],
+                        'max': this.inputRanges[iField][1],
+                        'width': '100%'
+                    }).appendTo(field);
+                    field.appendTo(row);
+                }
+                return row;
+            }
+
+        }
+
+        class RecipeForm {
+
+            constructor() {
+                this.recipeStageGenerator = new RecipeStage;
+                this.numStages = 1
+                this.addTableHeader();
+                this.addNewStage(this.numStages);
+            }
+
+            addTableHeader() {
+                this.recipeStageGenerator.genHeaderRow().appendTo($('#stagesTable'));
+            }
+
+            addNewStage() {
+                this.recipeStageGenerator.genStageRow(this.numStages).appendTo($('#stagesTableBody'));
+                this.numStages++;
+            }
+
+        }
+
+        function verifyNewRecipe() {
+            var recipeData = new FormData(document.getElementById('recipeForm'));
+            recipeData.append('mode', 'verify');
+            fetch('databaseInterface.php', {
+                method: 'POST',
+                body: recipeData,
+                mode: 'same-origin',
+                redirect: 'follow'
+            }).then(function(promisedResponse) {
+                return promisedResponse.json();
+            }).then(function(responseJson) {
+                console.log(responseJson);
+                var summaryModalDiv = $('<div/>', {
+                    'id': 'recipeSummary'
+                }).addClass('modalDiv');
+                var recipeSummary = new RecipeSummary(responseJson, summaryModalDiv);
+                recipeSummary.renderSummaryHeader();
+                recipeSummary.renderRecipeName();
+                recipeSummary.renderSummaryTable();
+                recipeSummary.renderChangeButton();
+                recipeSummary.renderCommitButton();
+                summaryModalDiv.appendTo($('body'));
+            }).catch(function(e) {
+                console.log(e);
+            });
+        }
+
+        function saveNewRecipe() {
+            dismissModal();
+            var recipeData = new FormData(document.getElementById('recipeForm'));
+            recipeData.append('mode', 'save');
+            fetch('databaseInterface.php', {
+                method: 'POST',
+                body: recipeData,
+                mode: 'same-origin',
+                redirect: 'follow'
+            }).then(function(promisedResponse) {
+                return promisedResponse.json();
+            }).then(function(responseJson) {
+                console.log(responseJson);
+                var summaryModalDiv = $('<div/>', {
+                    'id': 'recipeSummary'
+                }).addClass('modalDiv');
+                var recipeSummary = new RecipeSummary(responseJson, summaryModalDiv);
+                recipeSummary.renderSummaryHeader();
+                recipeSummary.renderRecipeName();
+                recipeSummary.renderSummaryTable();
+                recipeSummary.renderChangeButton();
+                recipeSummary.renderCommitButton();
+                summaryModalDiv.appendTo($('body'));
+            }).catch(function() {
+                console.log('Caught error!');
+            });
+        }
+
+        function addNewStage() {
+            recipeForm.addNewStage();
+        }
+
+        function dismissModal() {
+            $('#recipeSummary').remove();
+        }
+    </script>
 
 </head>
 
 <body class="ui-widget">
 
-  <h1>Charcuterizer Recipe Creator</h1>
-  <div id='contentDiv'>
-    <form id='recipeForm'>
-      <div class='recipeFormControls'>
-        <input type='text' name='recipeName' placeholder='Recipe Name' class='ui-widget' required/>
-        <button type='button' name='saveRecipe' value='saveRecipe' onclick='verifyNewRecipe()' class='ui-button'>Save Recipe</button>
-        <button type='button' name='addStage' value='addNewStage' onclick='addNewStage()' class='ui-button'>Add New Stage</button>
-      </div>
-      <table id='stagesTable' class='ui-widget generalTable'>
-        <tbody class="ui-widget-content" id='stagesTableBody'>
-        </tbody>
-      </table>
+    <h1>Charcuterizer Recipe Creator</h1>
+    <div id='contentDiv'>
+        <form id='recipeForm'>
+            <div class='recipeFormControls'>
+                <input type='text' name='recipeName' placeholder='Recipe Name' class='ui-widget' required/>
+                <button type='button' name='saveRecipe' value='saveRecipe' onclick='verifyNewRecipe()' class='ui-button'>Save Recipe</button>
+                <button type='button' name='addStage' value='addNewStage' onclick='addNewStage()' class='ui-button'>Add New Stage</button>
+            </div>
+            <table id='stagesTable' class='ui-widget generalTable'>
+                <tbody class="ui-widget-content" id='stagesTableBody'>
+                </tbody>
+            </table>
 
-    </form>
-  </div>
+        </form>
+    </div>
 </body>
 
 </html>
