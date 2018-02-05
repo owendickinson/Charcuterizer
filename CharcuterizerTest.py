@@ -94,7 +94,7 @@ try:  # this construct enables interruption of program using 'Ctrl-C'
         #     logger.completedStage()
         # else:
         print('heartbeat')
-        logger.heartbeat()
+        # logger.heartbeat()
 
         # OWEN EDIT HERE (MAYBE)
         time.sleep(10)
