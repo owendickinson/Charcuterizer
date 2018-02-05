@@ -9,9 +9,9 @@ class HeaterController:
         self.targetTemperatureRange = targetTemperatureRangeArg
         self.gpioControlPin = gpioControlPinArg
 
-        isHeaterActive = False
+        self.isHeaterActive = False
 
-        isGpioSetup = False
+        self.isGpioSetup = False
 
     def __del__(self):
         if self.isGpioSetup:
