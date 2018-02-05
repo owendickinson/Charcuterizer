@@ -4,24 +4,22 @@ import RPi.GPIO as GPIO
 
 class DehumidifierController:
 
-    # Variable defining the range of acceptable humidities (should be a tuple)
-    # Units are percent.
-    targetHumidityRange = None
-
-    # Variable defining the sensor control object that this object listens to
-    sensor = None
-
-    # Variable defining the GPIO pin that controlls the humidifier relay
-    gpioControlPin = None
-
-    isDehumidifierActive = False
-
-    isGpioSetup = False
-
     def __init__(self, sensorArg, targetHumidityRangeArg, gpioControlPinArg):
+        # Save input arguments to instance variables
+        # Variable defining the sensor control object that this object listens to
         self.sensor = sensorArg
+        # Variable defining the range of acceptable humidities (should be a tuple)
+        # Units are percent.
         self.targetHumidityRange = targetHumidityRangeArg
+        # Variable defining the GPIO pin that controls the humidifier relay
         self.gpioControlPin = gpioControlPinArg
+
+        # Initialize remaining instance variables to sensible values
+        # Variable defining the activity state of the dehumidifier.
+        self.isDehumidifierActive = False
+
+        # Variable defining the setup status of the GPIO interface
+        self.isGpioSetup = False
 
     def __del__(self):
         if self.isGpioSetup:

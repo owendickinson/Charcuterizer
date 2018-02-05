@@ -34,32 +34,32 @@ import datetime
 
 # create a Recipe (loads recipe data from the database)
 # OWEN EDIT HERE
-recipe = Recipe(1)
-recipe.connectToDb()
-recipe.loadInfoForRecipe()
-recipe.loadInfoForStages()
-
-# OWEN EDIT HERE
-recovering = True  # CHANGE TO: False if not recovering
-# Use the recipe to create a schedule
-schedule = None
-if recovering:
-    schedule = recipe.makeScheduleForInterruptedRecipe()
-else:
-    schedule = recipe.makeScheduleForRecipe()
-# OLD CODE => schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)],
-# [(60, 70),(80, 90),(65, 85)])
-schedule.printVariables()
-print("Current humidity range is {}".format(schedule.getHumidityRange()))
-print("Current temperature range is {}".format(schedule.getTemperatureRange()))
-
-# create a Logger object to monitor progress
-logger = Logger(recipe.recipeId)
-
-# create a new batch and batch log for this recipe
-logger.connectToDb()
-# OWEN EDIT HERE (MAYBE)
-logger.newBatch('Test With Comment')
+# recipe = Recipe(1)
+# recipe.connectToDb()
+# recipe.loadInfoForRecipe()
+# recipe.loadInfoForStages()
+#
+# # OWEN EDIT HERE
+# recovering = True  # CHANGE TO: False if not recovering
+# # Use the recipe to create a schedule
+# schedule = None
+# if recovering:
+#     schedule = recipe.makeScheduleForInterruptedRecipe()
+# else:
+#     schedule = recipe.makeScheduleForRecipe()
+# # OLD CODE => schedule = Schedule([3, 4, 5], [(18, 20),(25, 27),(18, 25)],
+# # [(60, 70),(80, 90),(65, 85)])
+# schedule.printVariables()
+# print("Current humidity range is {}".format(schedule.getHumidityRange()))
+# print("Current temperature range is {}".format(schedule.getTemperatureRange()))
+#
+# # create a Logger object to monitor progress
+# logger = Logger(recipe.recipeId)
+#
+# # create a new batch and batch log for this recipe
+# logger.connectToDb()
+# # OWEN EDIT HERE (MAYBE)
+# logger.newBatch('Test With Comment')
 
 # SENSOR AND HARDWARE CONTROLLER SETUP
 
@@ -67,7 +67,7 @@ logger.newBatch('Test With Comment')
 # number dusing the BROADCOM numbering scheme
 hts = HumTemSensor(18)
 
-tc = HeaterController(hts, schedule.getTemperatureRange(), 14)
+tc = HeaterController(hts, [0, 20], 14)
 tc.printVariables()
 
 # create an object of type HumidifierController
@@ -76,25 +76,25 @@ tc.printVariables()
 # hc.querySensor()
 
 # create an object of type HumidifierController
-dhc = DehumidifierController(hts, schedule.getHumidityRange(), 17)
+dhc = DehumidifierController(hts, [60, 65], 17)
 dhc.printVariables()
 dhc.querySensor()
 
 try:  # this construct enables interruption of program using 'Ctrl-C'
-    while not schedule.isComplete():
+    while True:
         # hc.targetHumidityRange = schedule.getHumidityRange()
-        dhc.targetHumidityRange = schedule.getHumidityRange()
-        tc.targetTemperatureRange = schedule.getTemperatureRange()
+        # dhc.targetHumidityRange = schedule.getHumidityRange()
+        # tc.targetTemperatureRange = schedule.getTemperatureRange()
 
         # hc.switchHumidifier()
         dhc.switchDehumidifier()
         tc.switchHeater()
 
-        if schedule.isUpdateRequired():  # stage has changed
-            logger.completedStage()
-        else:
-            print('heartbeat')
-            logger.heartbeat()
+        # if schedule.isUpdateRequired():  # stage has changed
+        #     logger.completedStage()
+        # else:
+        print('heartbeat')
+        logger.heartbeat()
 
         # OWEN EDIT HERE (MAYBE)
         time.sleep(10)

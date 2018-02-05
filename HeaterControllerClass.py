@@ -4,18 +4,14 @@ import RPi.GPIO as GPIO
 
 class HeaterController:
 
-    targetTemperatureRange = None
-    sensor = None
-    gpioControlPin = None
-
-    isHeaterActive = False
-
-    isGpioSetup = False
-
     def __init__(self, sensorArg, targetTemperatureRangeArg, gpioControlPinArg):
         self.sensor = sensorArg
         self.targetTemperatureRange = targetTemperatureRangeArg
         self.gpioControlPin = gpioControlPinArg
+
+        isHeaterActive = False
+
+        isGpioSetup = False
 
     def __del__(self):
         if self.isGpioSetup:
